@@ -1,0 +1,42 @@
+.page {
+    padding: 2rem;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .header button {
+    padding: 0.5rem 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .grid {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .grid th, .grid td {
+    border: 1px solid #eee;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  
+  .grid th {
+    background-color: #f4f4f4;
+    font-weight: 600;
+  }
+  
+  .grid tr:hover {
+    background-color: #fafafa;
+  }
+  
+
+  

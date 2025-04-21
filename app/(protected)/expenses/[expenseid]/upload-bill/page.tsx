@@ -1,0 +1,129 @@
+"use client";
+import { useState, useRef, useActionState } from "react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import styles from "./page.module.css";
+import { uploadBillAction } from "@/lib/actions";
+import Link from "next/link";
+import { useUser } from "@/context/user-context";
+
+export default function BillUploadPreview() {
+  const { expenseid } = useParams();
+  const user = useUser();
+
+  const [state, formAction] = useActionState(
+    uploadBillAction.bind(
+      null,
+      expenseid as unknown as number,
+      user.id as unknown as number
+    ),
+    { message: "" }
+  );
+
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [fileType, setFileType] = useState("");
+  const fileRef = useRef(null);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFileChange = (event: any) => {
+    const file = event?.target?.files[0];
+    if (!file) {
+      setPreviewUrl("");
+      return;
+    }
+    setFileType(file.type);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className={styles.container}>
+      {/* Left: Form */}
+      <div className={styles.left}>
+        <h2>Upload Bill</h2>
+        <form className={styles.form} action={formAction}>
+          <div className={styles.field}>
+            <label>Title</label>
+            <input name="name" required className={styles.input} readOnly/>
+          </div>
+
+          <div className={styles.field}>
+            <label>Description</label>
+            <input name="description" className={styles.input} />
+          </div>
+          <div className={styles.field}></div>
+          <label>Amount</label>
+          <input
+            name="amount"
+            type="number"
+            required
+            className={styles.input}
+          />
+
+          <div className={styles.field}>
+            <label>Category</label>
+            <select name="category" className={styles.input}>
+              <option>Travel</option>
+              <option>Food</option>
+              <option>Office</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label>Date</label>
+            <input type="date" name="date" required className={styles.input} />
+          </div>
+
+          <div className={styles.field}>
+            <label>Upload Bill</label>
+            <input
+              id="url"
+              type="file"
+              ref={fileRef}
+              name="url"
+              accept="image/jpg,image/jpeg,image/png,application/pdf"
+              onChange={handleFileChange}
+              className={styles.input}
+            />
+          </div>
+          {state?.message && <p>{state.message}</p>}
+          <div
+            style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
+          >
+            <button type="submit" className={styles.button}>
+              Upload
+            </button>
+
+            <Link href="/bills" style={{ textDecoration: "none" }}>
+              <button className={styles.button}>Cancel</button>
+            </Link>
+          </div>
+        </form>
+      </div>
+
+      {/* Right: Preview */}
+      <div className={styles.right}>
+        <h2>Preview</h2>
+        {previewUrl ? (
+          fileType === "application/pdf" ? (
+            <iframe src={previewUrl} className={styles.previewFrame} />
+          ) : (
+            <Image
+              src={previewUrl}
+              alt="Bill Preview"
+              width={500}
+              height={500}
+              className={styles.previewImage}
+            />
+          )
+        ) : (
+          <p>No file uploaded</p>
+        )}
+      </div>
+    </div>
+  );
+}

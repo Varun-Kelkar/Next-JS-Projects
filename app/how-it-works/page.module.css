@@ -1,0 +1,11 @@
+.workflowWrapper {
+  width: 100%;
+  height: 400px;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .workflowWrapper {
+    height: 500px;
+  }
+}

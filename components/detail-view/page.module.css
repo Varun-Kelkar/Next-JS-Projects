@@ -1,0 +1,18 @@
+.detailsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  background-color: #e8f1ff; /* pastel blue background */
+  border: 1px solid #a3c4f3; /* light border for contrast */
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: #1a2b4c;
+  box-shadow: 0 2px 4px rgba(163, 196, 243, 0.3);
+}
+

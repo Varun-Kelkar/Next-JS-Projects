@@ -1,0 +1,81 @@
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.grid th,
+.grid td {
+  border: 1px solid #eee;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.grid th {
+  background-color: #0a0f2c;
+  color: white; /* or #1f2937 */
+  font-weight: 600;
+}
+
+.grid tr:hover {
+  background-color: #f0f8ff;
+}
+
+.grid tbody{
+    overflow-y: scroll;
+}
+
+.noData {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #6b7280;
+}
+.noDataText {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.link {
+  color: #0070f3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.chip {
+  padding: 0.5rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+  color: white;
+}
+
+.pending {
+  background-color: #fff9c4; /* yellow */
+  border: 1px solid #fbc02d;
+  color: #795548;
+}
+
+.approved {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #2e7d32; /* green */
+}
+
+.submitted {
+  background: #b3e5fc;
+  color: #0d47a1;
+  border: 1px solid #0288d1;
+}
+
+.reimbursed {
+  background-color: #d2f4ef;
+  color: #00695c;
+  border: 1px solid #b2e8e1;
+}
+
+.rejected {
+  background-color: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+}

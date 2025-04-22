@@ -3,7 +3,14 @@ import styles from "./page.module.css";
 
 export default function LandingPage() {
   return (
-    <main style={{ flex: 1, overflow: "scroll" }}>
+    <main
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        overflow: "scroll",
+      }}
+    >
       <section className={styles.hero}>
         <div className={styles["hero-content"]}>
           <h1>Effortless Expense Filing. Instant Reimbursement.</h1>

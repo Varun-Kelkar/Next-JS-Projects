@@ -1,9 +1,9 @@
 "use client";
 import React, { useMemo } from "react";
 import ReactFlow, { Background, Controls } from "reactflow";
+import useIsMobile from "@/app/hooks";
 import "reactflow/dist/style.css";
 import styles from "./page.module.css";
-import useIsMobile from "@/app/hooks";
 
 export default function Workflow() {
   const isMobile = useIsMobile();
@@ -73,7 +73,7 @@ export default function Workflow() {
   ];
 
   return (
-    <main className={styles.workflowWrapper}>
+    <main className={styles.page}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

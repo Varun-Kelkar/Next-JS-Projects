@@ -7,7 +7,7 @@ export default function ContactUs() {
   const [state, formAction] = useActionState(contactUsAction, { message: "" });
 
   return (
-    <main className={styles.container}>
+    <main className={styles.page}>
       <h2 className={styles.heading}>Contact Us</h2>
       <p className={styles.subtitle}>
         We’d love to hear from you. Send us a message!

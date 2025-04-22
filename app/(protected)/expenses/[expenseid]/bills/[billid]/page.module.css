@@ -5,27 +5,7 @@
   margin: 1rem 0;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
 
-.header button {
-  padding: 0.75rem 1rem;
-  background: #66a6ff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 18px;
-}
-
-button:hover {
-  background: #4d91f5;
-}
 
 .left,
 .right {

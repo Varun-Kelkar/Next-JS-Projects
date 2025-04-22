@@ -40,14 +40,13 @@ export default function BillUploadPreview() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Left: Form */}
-      <div className={styles.left}>
+    <main className={styles.page}>
+      <section className={styles.left}>
         <h2>Upload Bill</h2>
         <form className={styles.form} action={formAction}>
           <div className={styles.field}>
             <label>Title</label>
-            <input name="name" required className={styles.input} readOnly/>
+            <input name="name" required className={styles.input} readOnly />
           </div>
 
           <div className={styles.field}>
@@ -98,15 +97,16 @@ export default function BillUploadPreview() {
               Upload
             </button>
 
-            <Link href="/bills" style={{ textDecoration: "none" }}>
+            <Link
+              href={`/expenses/${expenseid}`}
+              style={{ textDecoration: "none" }}
+            >
               <button className={styles.button}>Cancel</button>
             </Link>
           </div>
         </form>
-      </div>
-
-      {/* Right: Preview */}
-      <div className={styles.right}>
+      </section>
+      <section className={styles.right}>
         <h2>Preview</h2>
         {previewUrl ? (
           fileType === "application/pdf" ? (
@@ -123,7 +123,7 @@ export default function BillUploadPreview() {
         ) : (
           <p>No file uploaded</p>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

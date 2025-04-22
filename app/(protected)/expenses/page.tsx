@@ -6,6 +6,7 @@ import CustomDialog from "../../../components/dialog/dialog";
 import { redirect } from "next/navigation";
 import { useUser } from "@/context/user-context";
 import DataGrid, { Column } from "@/components/data-grid/page";
+import PageHeader from "@/components/page-header/page-header";
 
 const expenseColumns: Array<Column> = [
   {
@@ -49,20 +50,27 @@ export default function ExpensesPage() {
     if (formRef.current) {
       const formData = new FormData(formRef.current);
       const data = Object.fromEntries(formData.entries());
-      console.log("Form Data:", data);
-      createExpenseAction(data, user.id);
-      redirect("/bills");
+      const expenseId = createExpenseAction(data, user.id);
+      redirect(`/expenses/${expenseId}`);
     }
     setOpen(false);
   };
 
   const loadExpenses = async () => {
-    const expenses = await getAllExpensesAction(user.id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expenses.forEach((expense: any) => {
-      expense.date = new Date(expense.date).toLocaleDateString();
-    });
-    setExpenses(expenses);
+    try {
+      const expenses = await getAllExpensesAction(user.id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expenses.forEach((expense: any) => {
+        expense.date = new Date(expense.date).toLocaleDateString();
+      });
+      setExpenses(expenses);
+    } catch (error: unknown) {
+      console.error("Error loading expenses", error);
+    }
+  };
+
+  const openCreateExpenseDialog = () => {
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -70,13 +78,15 @@ export default function ExpensesPage() {
   }, []);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <h2>Expenses</h2>
-        <button onClick={() => setOpen(true)}>Create Expense</button>
-      </div>
+    <main>
+      <PageHeader
+        title="Expenses"
+        actions={[
+          { label: "Create Expense", onClickCallback: openCreateExpenseDialog },
+        ]}
+      />
 
-      <div>
+      <section>
         <CustomDialog
           open={open}
           title="Create Expense"
@@ -123,9 +133,11 @@ export default function ExpensesPage() {
             },
           ]}
         />
-      </div>
+      </section>
 
-      <DataGrid columns={expenseColumns} data={expenses} />
-    </div>
+      <section>
+        <DataGrid columns={expenseColumns} data={expenses} />
+      </section>
+    </main>
   );
 }

@@ -47,9 +47,7 @@ export default async function RootLayout({
             </ul>
           </nav>
         </header>
-        {/* <main style={{ flex: 1, overflow: "scroll" }}> */}
         {children}
-        {/* </main> */}
         <footer className={styles.footer}>
           <p>&copy; 2025 Expense Manager. All Rights Reserved.</p>
         </footer>

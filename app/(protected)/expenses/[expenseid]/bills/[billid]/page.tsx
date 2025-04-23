@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
-import { useEffect, useRef, useState } from "react";
-import "@/app/globals.css";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect, useParams } from "next/navigation";
 import { getBillByIdAction, updateBillByIdAction } from "@/lib/actions";
 import PageHeader from "@/components/page-header/page-header";
+import FileUploader from "@/components/file-uploader/file-uploader";
+import { useFileUpload } from "@/components/file-uploader/useFileUploader";
+import styles from "./page.module.css";
+import "@/app/globals.css";
 
 export type Bill = {
   id?: number;
@@ -23,8 +25,15 @@ export type Bill = {
 };
 export default function BillDetailPage() {
   const { expenseid, billid } = useParams();
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [fileType, setFileType] = useState("");
+  const {
+    file,
+    fileType,
+    previewUrl,
+    handleFileChange,
+    handleSetFileType,
+    handleSetPreviewUrl,
+  } = useFileUpload();
+
   const [billDetails, setBillDetails] = useState<Bill>({
     name: "",
     amount: "",
@@ -34,32 +43,11 @@ export default function BillDetailPage() {
   });
   const [isdisabled, setIsdisabled] = useState(true);
 
-  const fileRef = useRef(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = (event: any) => {
-    const file = event?.target?.files[0];
-    setBillDetails((prev) => ({
-      ...prev,
-      url: file,
-    }));
-    if (!file) {
-      setPreviewUrl("");
-      return;
-    }
-    setFileType(file.type);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
   const loadBillDetails = async () => {
     const billDetails = await getBillByIdAction(Number(billid));
     setBillDetails(billDetails as Bill);
-    setPreviewUrl((billDetails as Bill)?.url as string);
-    setFileType((billDetails as Bill)?.url?.split(".").pop() as string);
+    handleSetPreviewUrl((billDetails as Bill)?.url as string);
+    handleSetFileType((billDetails as Bill)?.url?.split(".").pop() as string);
   };
 
   const handleChange = (
@@ -71,10 +59,10 @@ export default function BillDetailPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = await updateBillByIdAction(
-      Number(billid),
-      billDetails as Bill
-    );
+    const result = await updateBillByIdAction(Number(billid), {
+      ...(billDetails as Bill),
+      url: file ?? previewUrl,
+    });
     redirect(`/expenses/${expenseid}`);
   };
 
@@ -152,19 +140,26 @@ export default function BillDetailPage() {
             </div>
 
             {!isdisabled && (
-              <div className={styles.field}>
-                <label>Upload Bill</label>
-                <input
-                  id="url"
-                  type="file"
-                  ref={fileRef}
-                  name="url"
-                  accept="image/jpg,image/jpeg,image/png,application/pdf"
-                  onChange={handleFileChange}
-                  className={styles.input}
-                  disabled={isdisabled}
-                />
-              </div>
+              <FileUploader
+                id="url"
+                name="url"
+                label="Upload Bill"
+                accept="image/jpg,image/jpeg,image/png,application/pdf"
+                onChange={handleFileChange}
+              />
+              // <div className={styles.field}>
+              //   <label>Upload Bill</label>
+              //   <input
+              //     id="url"
+              //     type="file"
+              //     ref={fileRef}
+              //     name="url"
+              //     accept="image/jpg,image/jpeg,image/png,application/pdf"
+              //     onChange={handleFileChange}
+              //     className={styles.input}
+              //     disabled={isdisabled}
+              //   />
+              // </div>
             )}
 
             {/* {state?.message && <p>{state.message}</p>} */}

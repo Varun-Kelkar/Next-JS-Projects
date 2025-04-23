@@ -1,11 +1,13 @@
 "use client";
-import { useState, useRef, useActionState } from "react";
+import { useActionState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import styles from "./page.module.css";
 import { uploadBillAction } from "@/lib/actions";
 import Link from "next/link";
 import { useUser } from "@/context/user-context";
+import { useFileUpload } from "@/components/file-uploader/useFileUploader";
+import FileUploader from "@/components/file-uploader/file-uploader";
 
 export default function BillUploadPreview() {
   const { expenseid } = useParams();
@@ -20,24 +22,10 @@ export default function BillUploadPreview() {
     { message: "" }
   );
 
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [fileType, setFileType] = useState("");
-  const fileRef = useRef(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = (event: any) => {
-    const file = event?.target?.files[0];
-    if (!file) {
-      setPreviewUrl("");
-      return;
-    }
-    setFileType(file.type);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  // const [previewUrl, setPreviewUrl] = useState("");
+  // const [fileType, setFileType] = useState("");
+  // const fileRef = useRef(null);
+  const { fileType, previewUrl, handleFileChange } = useFileUpload();
 
   return (
     <main className={styles.page}>
@@ -46,7 +34,7 @@ export default function BillUploadPreview() {
         <form className={styles.form} action={formAction}>
           <div className={styles.field}>
             <label>Title</label>
-            <input name="name" required className={styles.input} readOnly />
+            <input name="name" required className={styles.input} />
           </div>
 
           <div className={styles.field}>
@@ -77,7 +65,15 @@ export default function BillUploadPreview() {
             <input type="date" name="date" required className={styles.input} />
           </div>
 
-          <div className={styles.field}>
+          <FileUploader
+            id="url"
+            name="url"
+            label="Upload Bill"
+            accept="image/jpg,image/jpeg,image/png,application/pdf"
+            onChange={handleFileChange}
+          />
+
+          {/* <div className={styles.field}>
             <label>Upload Bill</label>
             <input
               id="url"
@@ -88,7 +84,7 @@ export default function BillUploadPreview() {
               onChange={handleFileChange}
               className={styles.input}
             />
-          </div>
+          </div> */}
           {state?.message && <p>{state.message}</p>}
           <div
             style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}

@@ -25,8 +25,13 @@ export default function BillDetailPage() {
   const { expenseid, billid } = useParams();
   const [previewUrl, setPreviewUrl] = useState("");
   const [fileType, setFileType] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [billDetails, setBillDetails] = useState<Bill>({});
+  const [billDetails, setBillDetails] = useState<Bill>({
+    name: "",
+    amount: "",
+    category: "",
+    date: "",
+    url: "",
+  });
   const [isdisabled, setIsdisabled] = useState(true);
 
   const fileRef = useRef(null);

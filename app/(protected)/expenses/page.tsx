@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { useUser } from "@/context/user-context";
 import DataGrid, { Column } from "@/components/data-grid/page";
 import PageHeader from "@/components/page-header/page-header";
+import { useDialog } from "@/components/dialog/useDialog";
 
 const expenseColumns: Array<Column> = [
   {
@@ -40,7 +41,7 @@ const expenseColumns: Array<Column> = [
 ];
 
 export default function ExpensesPage() {
-  const [open, setOpen] = useState(false);
+  const dialog = useDialog();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [expenses, setExpenses] = useState<Array<any>>([]);
   const formRef = useRef(null);
@@ -50,10 +51,10 @@ export default function ExpensesPage() {
     if (formRef.current) {
       const formData = new FormData(formRef.current);
       const data = Object.fromEntries(formData.entries());
-      const expenseId = createExpenseAction(data, user.id);
+      const expenseId = await createExpenseAction(data, user.id);
       redirect(`/expenses/${expenseId}`);
     }
-    setOpen(false);
+    dialog.close();
   };
 
   const loadExpenses = async () => {
@@ -69,10 +70,6 @@ export default function ExpensesPage() {
     }
   };
 
-  const openCreateExpenseDialog = () => {
-    setOpen(true);
-  };
-
   useEffect(() => {
     loadExpenses();
   }, []);
@@ -81,14 +78,12 @@ export default function ExpensesPage() {
     <main>
       <PageHeader
         title="Expenses"
-        actions={[
-          { label: "Create Expense", onClickCallback: openCreateExpenseDialog },
-        ]}
+        actions={[{ label: "Create Expense", onClickCallback: dialog.open }]}
       />
 
       <section>
         <CustomDialog
-          open={open}
+          open={dialog.isOpen}
           title="Create Expense"
           content={
             <form ref={formRef} className={styles.form}>
@@ -124,9 +119,9 @@ export default function ExpensesPage() {
               </div>
             </form>
           }
-          onClose={() => setOpen(false)}
+          onClose={dialog.close}
           actions={[
-            { label: "Cancel", onClick: () => setOpen(false) },
+            { label: "Cancel", onClick: dialog.close },
             {
               label: "Create",
               onClick: handleSubmit,

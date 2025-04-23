@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./dialog.module.css";
 
-interface CustomDialogProps {
+interface DialogProps {
   open: boolean;
   title: string;
   content: React.ReactNode;
@@ -9,13 +9,13 @@ interface CustomDialogProps {
   onClose: () => void;
 }
 
-export default function CustomDialog({
+export default function Dialog({
   open,
   title,
   content,
   actions = [],
   onClose,
-}: CustomDialogProps) {
+}: DialogProps) {
   if (!open) return null;
 
   return (

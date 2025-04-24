@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./dialog.module.css";
 
-interface CustomDialogProps {
+interface DialogProps {
   open: boolean;
   title: string;
   content: React.ReactNode;
@@ -9,13 +9,13 @@ interface CustomDialogProps {
   onClose: () => void;
 }
 
-export default function CustomDialog({
+export default function Dialog({
   open,
   title,
   content,
   actions = [],
   onClose,
-}: CustomDialogProps) {
+}: DialogProps) {
   if (!open) return null;
 
   return (
@@ -24,17 +24,13 @@ export default function CustomDialog({
         <div className={styles.header}>
           <h3>{title}</h3>
           <button className={styles.closeBtn} onClick={onClose}>
-            ×
+            X
           </button>
         </div>
         <div className={styles.content}>{content}</div>
         <div className={styles.actions}>
           {actions.map((action, index) => (
-            <button
-              key={index}
-              className={styles.actionButton}
-              onClick={action.onClick}
-            >
+            <button key={index} onClick={action.onClick}>
               {action.label}
             </button>
           ))}

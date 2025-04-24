@@ -1,9 +1,9 @@
 "use client";
 import React, { useRef, useState } from "react";
-import styles from "./page.module.css";
-import CustomDialog from "@/components/dialog/dialog";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import CustomDialog from "@/components/dialog/dialog";
+import styles from "./page.module.css";
 
 export default function Bills() {
   const [open, setOpen] = useState(false);

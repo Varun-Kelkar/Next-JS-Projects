@@ -5,27 +5,7 @@
   margin: 1rem 0;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
 
-.header button {
-  padding: 0.75rem 1rem;
-  background: #66a6ff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 18px;
-}
-
-button:hover {
-  background: #4d91f5;
-}
 
 .left,
 .right {
@@ -61,17 +41,21 @@ button:hover {
   box-shadow: 0 0 0 3px rgba(102, 166, 255, 0.2);
 }
 
-.button {
+.secondaryButton {
   padding: 0.75rem 1rem;
-  background: #66a6ff;
-  color: white;
-  border: none;
+  background: white;
+  color: #0070f3;
+  border: 1px solid #0070f3;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
   transition: background 0.3s ease;
+  font-size: 18px;
 }
 
-.button:hover {
-  background: #4d91f5;
+.secondaryButton:hover {
+  background: white;
+  color: #0070f3;
+  border: 1px solid #0070f3;
 }
+
+

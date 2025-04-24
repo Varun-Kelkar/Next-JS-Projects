@@ -1,11 +1,13 @@
 "use client";
-import { useState, useRef, useActionState } from "react";
+import { useActionState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import styles from "./page.module.css";
 import { uploadBillAction } from "@/lib/actions";
 import Link from "next/link";
 import { useUser } from "@/context/user-context";
+import { useFileUpload } from "@/components/file-uploader/useFileUploader";
+import FileUploader from "@/components/file-uploader/file-uploader";
 
 export default function BillUploadPreview() {
   const { expenseid } = useParams();
@@ -20,34 +22,17 @@ export default function BillUploadPreview() {
     { message: "" }
   );
 
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [fileType, setFileType] = useState("");
-  const fileRef = useRef(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = (event: any) => {
-    const file = event?.target?.files[0];
-    if (!file) {
-      setPreviewUrl("");
-      return;
-    }
-    setFileType(file.type);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  const { file, fileType, previewUrl, handleFileChange, clear } =
+    useFileUpload();
 
   return (
-    <div className={styles.container}>
-      {/* Left: Form */}
-      <div className={styles.left}>
+    <main className={styles.page}>
+      <section className={styles.left}>
         <h2>Upload Bill</h2>
         <form className={styles.form} action={formAction}>
           <div className={styles.field}>
             <label>Title</label>
-            <input name="name" required className={styles.input} readOnly/>
+            <input name="name" required className={styles.input} />
           </div>
 
           <div className={styles.field}>
@@ -78,35 +63,31 @@ export default function BillUploadPreview() {
             <input type="date" name="date" required className={styles.input} />
           </div>
 
-          <div className={styles.field}>
-            <label>Upload Bill</label>
-            <input
-              id="url"
-              type="file"
-              ref={fileRef}
-              name="url"
-              accept="image/jpg,image/jpeg,image/png,application/pdf"
-              onChange={handleFileChange}
-              className={styles.input}
-            />
-          </div>
+          <FileUploader
+            id="url"
+            name="url"
+            label="Upload Bill"
+            accept="image/jpg,image/jpeg,image/png,application/pdf"
+            onChange={handleFileChange}
+            onClear={clear}
+            selectedFile={file}
+          />
           {state?.message && <p>{state.message}</p>}
           <div
             style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
           >
-            <button type="submit" className={styles.button}>
-              Upload
-            </button>
+            <button type="submit">Upload</button>
 
-            <Link href="/bills" style={{ textDecoration: "none" }}>
-              <button className={styles.button}>Cancel</button>
+            <Link
+              href={`/expenses/${expenseid}`}
+              style={{ textDecoration: "none" }}
+            >
+              <button className={styles.secondaryButton}>Cancel</button>
             </Link>
           </div>
         </form>
-      </div>
-
-      {/* Right: Preview */}
-      <div className={styles.right}>
+      </section>
+      <section className={styles.right}>
         <h2>Preview</h2>
         {previewUrl ? (
           fileType === "application/pdf" ? (
@@ -123,7 +104,7 @@ export default function BillUploadPreview() {
         ) : (
           <p>No file uploaded</p>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

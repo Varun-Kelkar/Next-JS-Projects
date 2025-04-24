@@ -14,7 +14,7 @@ export default async function AuthLayout({
     redirect("/authentication?mode=login");
   }
   return (
-    <main style={{ flex: 1, overflow: "scroll" }}>
+    <main style={{ flex: 1, overflow: "scroll", padding: "1rem" }}>
       <UserProvider value={user as User}>{children}</UserProvider>
     </main>
   );

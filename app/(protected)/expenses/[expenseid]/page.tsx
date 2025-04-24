@@ -1,10 +1,7 @@
-// "use client";
-import styles from "./page.module.css";
-
-import Link from "next/link";
+import { getBillsByExpenseIdAction } from "@/lib/actions";
 import DataGrid, { Column } from "@/components/data-grid/page";
 import DetailsView from "@/components/detail-view/page";
-import { getBillsByExpenseIdAction } from "@/lib/actions";
+import PageHeader from "@/components/page-header/page-header";
 
 const mockDetails = [
   { label: "Title", value: "Business Lunch" },
@@ -12,15 +9,14 @@ const mockDetails = [
   { label: "Category", value: "Food" },
   { label: "Date", value: "2025-04-19" },
 ];
-
+type Params = Promise<{ expenseid: string }>;
 type PageProps = {
-  params: { [key: string]: string }; // Or more specific if you know the params
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Params;
 };
 export default async function ExpenseDetails({ params }: PageProps) {
   const { expenseid } = await params;
 
-  const expenseColumns: Array<Column> = [
+  const billColumns: Array<Column> = [
     {
       id: "name",
       name: "Name",
@@ -54,24 +50,23 @@ export default async function ExpenseDetails({ params }: PageProps) {
   const bills = await getBillsByExpenseIdAction(Number(expenseid));
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <h2>Expense Details for {expenseid}</h2>
-      </div>
-      <div>
+    <main>
+      <PageHeader title="Expense Details" />
+      <section id="expense-details">
         <DetailsView details={mockDetails} />
-      </div>
-      <div className={styles.header}>
-        <h2>Bills</h2>
-        <Link
-          href={`/expenses/${expenseid}/upload-bill`}
-          style={{ textDecoration: "none" }}
-        >
-          <button className={styles.button}>Upload Bill</button>
-        </Link>
-      </div>
-
-      <DataGrid columns={expenseColumns} data={bills} />
-    </div>
+      </section>
+      <PageHeader
+        title="Bills"
+        actions={[
+          {
+            label: "Upload Bill",
+            href: `/expenses/${expenseid}/upload-bill`,
+          },
+        ]}
+      />
+      <section id="bills-list">
+        <DataGrid columns={billColumns} data={bills} />
+      </section>
+    </main>
   );
 }

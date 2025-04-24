@@ -7,8 +7,10 @@ import { hashUserPassword, verifyPassword } from "./hash";
 import {
   createBill,
   createExpense,
+  getBillById,
   getBillsByExpenseId,
   getExpensesByUserId,
+  updateBillById,
 } from "./expenses";
 import fs from "fs";
 
@@ -191,7 +193,7 @@ const isInvalidEmail = (email: string) => {
 export async function createExpenseAction(formData: any, userId: string) {
   const expenseData = {
     ...formData,
-    status: "Rejected",
+    status: "Submitted",
     date: new Date().toISOString(),
     user_id: userId,
   };
@@ -209,7 +211,7 @@ export async function createExpenseAction(formData: any, userId: string) {
 
   const result = await createExpense(expenseData);
 
-  console.log("Expense created with ID:", result);
+  return result;
 }
 
 export async function getAllExpensesAction(userId: string) {
@@ -223,6 +225,30 @@ export async function getBillsByExpenseIdAction(expenseId: number) {
 }
 
 export async function getBillByIdAction(billId: number) {
-  const result = await getBillsByExpenseId(billId);
+  const result = await getBillById(billId);
+  return result;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function updateBillByIdAction(billId: number, billDetails: any) {
+  if (billDetails?.url?.name) {
+    const extension = billDetails.url?.name.split(".").pop();
+    const filename = `${(billDetails.name as string).trim()}-${
+      billDetails.date
+    }.${extension}`;
+    const filePath = `public/images/${filename}`;
+
+    const stream = fs.createWriteStream(filePath);
+    const bufferedImage = await billDetails.url.arrayBuffer();
+
+    stream.write(Buffer.from(bufferedImage), (error: unknown) => {
+      if (error) {
+        throw new Error("Error saving file");
+      }
+    });
+    billDetails.url = `/images/${filename}`;
+  }
+  const result = await updateBillById(Number(billId), billDetails);
+  console.log("Bill updated with ID:", result);
   return result;
 }

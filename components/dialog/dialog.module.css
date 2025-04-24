@@ -34,10 +34,14 @@
   }
   
   .closeBtn {
-    background: none;
-    border: none;
+    background-color: transparent;
     font-size: 1.25rem;
     cursor: pointer;
+    color: grey;
+  }
+
+  .closeBtn:hover {
+    background-color: transparent;
   }
   
   .content {
@@ -52,18 +56,5 @@
     gap: 0.75rem;
   }
   
-  .actionButton {
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: #1976d2;
-    color: white;
-    font-weight: 500;
-    transition: background 0.3s ease;
-  }
   
-  .actionButton:hover {
-    background: #1565c0;
-  }
   

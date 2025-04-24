@@ -1,69 +1,104 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
-import { useRef, useState } from "react";
-import "@/app/globals.css";
-// import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { redirect, useParams } from "next/navigation";
+import { getBillByIdAction, updateBillByIdAction } from "@/lib/actions";
+import PageHeader from "@/components/page-header/page-header";
+import FileUploader from "@/components/file-uploader/file-uploader";
+import { useFileUpload } from "@/components/file-uploader/useFileUploader";
+import styles from "./page.module.css";
+import "@/app/globals.css";
 
-export default function BillDetailPage() {
-  // const { expenseid, billid } = useParams();
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [fileType, setFileType] = useState("");
-  const fileRef = useRef(null);
-
+export type Bill = {
+  id?: number;
+  name?: string;
+  amount?: string;
+  category?: string;
+  status?: string;
+  date?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = (event: any) => {
-    const file = event?.target?.files[0];
-    if (!file) {
-      setPreviewUrl("");
-      return;
-    }
-    setFileType(file.type);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  url?: any;
+  user_id?: number;
+  expense_id?: number;
+};
+export default function BillDetailPage() {
+  const { expenseid, billid } = useParams();
+  const {
+    file,
+    fileType,
+    previewUrl,
+    handleFileChange,
+    handleSetFileType,
+    handleSetPreviewUrl,
+    clear,
+  } = useFileUpload();
+
+  const [billDetails, setBillDetails] = useState<Bill>({
+    name: "",
+    amount: "",
+    category: "",
+    date: "",
+    url: "",
+  });
+  const [isdisabled, setIsdisabled] = useState(true);
+
+  const loadBillDetails = async () => {
+    const billDetails = await getBillByIdAction(Number(billid));
+    setBillDetails(billDetails as Bill);
+    handleSetPreviewUrl((billDetails as Bill)?.url as string);
+    handleSetFileType((billDetails as Bill)?.url?.split(".").pop() as string);
   };
-  const [isReadOnly, setIsReadOnly] = useState(true);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setBillDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const result = await updateBillByIdAction(Number(billid), {
+      ...(billDetails as Bill),
+      url: file ?? previewUrl,
+    });
+    redirect(`/expenses/${expenseid}`);
+  };
+
+  const enableEditMode = () => {
+    setIsdisabled(false);
+  };
+
+  useEffect(() => {
+    loadBillDetails();
+  }, []);
 
   return (
-    <main style={{ flex: 1, overflow: "scroll", padding: "1rem" }}>
-      <section className={styles.header}>
-        <h2>Bills</h2>
+    <main>
+      <PageHeader
+        title="Bill Details"
+        actions={[{ label: "Edit Bill", onClickCallback: enableEditMode }]}
+      />
 
-        <button
-          onClick={() => {
-            setIsReadOnly(false);
-          }}
-        >
-          Edit Bill
-        </button>
-      </section>
       <section className={styles.container}>
         {/* Left: Form */}
         <div className={styles.left}>
           <h3>Upload Bill</h3>
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.field}>
               <label>Title</label>
               <input
                 name="name"
                 required
                 className={styles.input}
-                readOnly={isReadOnly}
+                disabled={isdisabled}
+                onChange={handleChange}
+                value={billDetails?.name}
               />
             </div>
 
-            <div className={styles.field}>
-              <label>Description</label>
-              <input
-                name="description"
-                className={styles.input}
-                readOnly={isReadOnly}
-              />
-            </div>
             <div className={styles.field}></div>
             <label>Amount</label>
             <input
@@ -71,7 +106,9 @@ export default function BillDetailPage() {
               type="number"
               required
               className={styles.input}
-              readOnly={isReadOnly}
+              disabled={isdisabled}
+              value={billDetails?.amount}
+              onChange={handleChange}
             />
 
             <div className={styles.field}>
@@ -79,7 +116,9 @@ export default function BillDetailPage() {
               <select
                 name="category"
                 className={styles.input}
-                disabled={isReadOnly}
+                disabled={isdisabled}
+                value={billDetails?.category}
+                onChange={handleChange}
               >
                 <option>Travel</option>
                 <option>Food</option>
@@ -95,23 +134,37 @@ export default function BillDetailPage() {
                 name="date"
                 required
                 className={styles.input}
-                readOnly={isReadOnly}
+                disabled={isdisabled}
+                value={billDetails?.date}
+                onChange={handleChange}
               />
             </div>
 
-            <div className={styles.field}>
-              <label>Upload Bill</label>
-              <input
+            {!isdisabled && (
+              <FileUploader
                 id="url"
-                type="file"
-                ref={fileRef}
                 name="url"
+                label="Upload Bill"
                 accept="image/jpg,image/jpeg,image/png,application/pdf"
                 onChange={handleFileChange}
-                className={styles.input}
-                readOnly={isReadOnly}
+                selectedFile={file}
+                onClear={clear}
               />
-            </div>
+              // <div className={styles.field}>
+              //   <label>Upload Bill</label>
+              //   <input
+              //     id="url"
+              //     type="file"
+              //     ref={fileRef}
+              //     name="url"
+              //     accept="image/jpg,image/jpeg,image/png,application/pdf"
+              //     onChange={handleFileChange}
+              //     className={styles.input}
+              //     disabled={isdisabled}
+              //   />
+              // </div>
+            )}
+
             {/* {state?.message && <p>{state.message}</p>} */}
             <div
               style={{
@@ -120,12 +173,13 @@ export default function BillDetailPage() {
                 justifyContent: "flex-end",
               }}
             >
-              <button type="submit" className={styles.button}>
-                Save
-              </button>
+              <button type="submit">Save</button>
 
-              <Link href="/bills" style={{ textDecoration: "none" }}>
-                <button className={styles.button}>Cancel</button>
+              <Link
+                href={`/expenses/${expenseid}`}
+                style={{ textDecoration: "none" }}
+              >
+                <button className={styles.secondaryButton}>Cancel</button>
               </Link>
             </div>
           </form>
@@ -135,14 +189,18 @@ export default function BillDetailPage() {
         <div className={styles.right}>
           <h3>Preview</h3>
           {previewUrl ? (
-            fileType === "application/pdf" ? (
-              <iframe src={previewUrl} className={styles.previewFrame} />
+            fileType === "pdf" || fileType === "application/pdf" ? (
+              <iframe
+                src={previewUrl}
+                className={styles.previewFrame}
+                style={{ height: "100%" }}
+              />
             ) : (
               <Image
                 src={previewUrl}
                 alt="Bill Preview"
                 width={500}
-                height={500}
+                height={600}
                 className={styles.previewImage}
               />
             )

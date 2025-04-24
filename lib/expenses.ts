@@ -71,7 +71,7 @@ export async function getExpenseById(expenseId: string) {
     .get(expenseId);
   return result;
 }
-export async function getBillById(billId: string) {
+export async function getBillById(billId: number) {
   const result = db.prepare(`SELECT * FROM bills WHERE id = ?`).get(billId);
   return result;
 }
@@ -100,14 +100,20 @@ export async function updateExpenseById(
   return result;
 }
 export async function updateBillById(
-  billId: string,
-  bill: { name?: string; amount?: string; category?: string; status?: string }
+  billId: number,
+  bill: {
+    name?: string;
+    amount?: string;
+    category?: string;
+    status?: string;
+    url?: string;
+  }
 ) {
   const result = db
     .prepare(
-      `UPDATE bills SET name = ?, amount = ?, category = ?, status = ? WHERE id = ?`
+      `UPDATE bills SET name = ?, amount = ?, category = ?, status = ?, url = ? WHERE id = ?`
     )
-    .run({ ...bill, billId });
+    .run(bill.name, bill.amount, bill.category, bill.status, bill.url, billId);
   return result;
 }
 export async function updateBillUrlById(billId: string, url: string) {

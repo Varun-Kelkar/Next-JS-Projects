@@ -22,10 +22,8 @@ export default function BillUploadPreview() {
     { message: "" }
   );
 
-  // const [previewUrl, setPreviewUrl] = useState("");
-  // const [fileType, setFileType] = useState("");
-  // const fileRef = useRef(null);
-  const { fileType, previewUrl, handleFileChange } = useFileUpload();
+  const { file, fileType, previewUrl, handleFileChange, clear } =
+    useFileUpload();
 
   return (
     <main className={styles.page}>
@@ -71,20 +69,9 @@ export default function BillUploadPreview() {
             label="Upload Bill"
             accept="image/jpg,image/jpeg,image/png,application/pdf"
             onChange={handleFileChange}
+            onClear={clear}
+            selectedFile={file}
           />
-
-          {/* <div className={styles.field}>
-            <label>Upload Bill</label>
-            <input
-              id="url"
-              type="file"
-              ref={fileRef}
-              name="url"
-              accept="image/jpg,image/jpeg,image/png,application/pdf"
-              onChange={handleFileChange}
-              className={styles.input}
-            />
-          </div> */}
           {state?.message && <p>{state.message}</p>}
           <div
             style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}

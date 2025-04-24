@@ -32,6 +32,7 @@ export default function BillDetailPage() {
     handleFileChange,
     handleSetFileType,
     handleSetPreviewUrl,
+    clear,
   } = useFileUpload();
 
   const [billDetails, setBillDetails] = useState<Bill>({
@@ -146,6 +147,8 @@ export default function BillDetailPage() {
                 label="Upload Bill"
                 accept="image/jpg,image/jpeg,image/png,application/pdf"
                 onChange={handleFileChange}
+                selectedFile={file}
+                onClear={clear}
               />
               // <div className={styles.field}>
               //   <label>Upload Bill</label>

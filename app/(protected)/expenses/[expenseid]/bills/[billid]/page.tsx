@@ -173,15 +173,13 @@ export default function BillDetailPage() {
                 justifyContent: "flex-end",
               }}
             >
-              <button type="submit" className={styles.button}>
-                Save
-              </button>
+              <button type="submit">Save</button>
 
               <Link
                 href={`/expenses/${expenseid}`}
                 style={{ textDecoration: "none" }}
               >
-                <button className={styles.button}>Cancel</button>
+                <button className={styles.secondaryButton}>Cancel</button>
               </Link>
             </div>
           </form>

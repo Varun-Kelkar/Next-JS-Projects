@@ -24,17 +24,13 @@ export default function Dialog({
         <div className={styles.header}>
           <h3>{title}</h3>
           <button className={styles.closeBtn} onClick={onClose}>
-            ×
+            X
           </button>
         </div>
         <div className={styles.content}>{content}</div>
         <div className={styles.actions}>
           {actions.map((action, index) => (
-            <button
-              key={index}
-              className={styles.actionButton}
-              onClick={action.onClick}
-            >
+            <button key={index} onClick={action.onClick}>
               {action.label}
             </button>
           ))}

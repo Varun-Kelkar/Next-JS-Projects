@@ -76,15 +76,13 @@ export default function BillUploadPreview() {
           <div
             style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
           >
-            <button type="submit" className={styles.button}>
-              Upload
-            </button>
+            <button type="submit">Upload</button>
 
             <Link
               href={`/expenses/${expenseid}`}
               style={{ textDecoration: "none" }}
             >
-              <button className={styles.button}>Cancel</button>
+              <button className={styles.secondaryButton}>Cancel</button>
             </Link>
           </div>
         </form>

@@ -25,7 +25,7 @@ export default function PageHeader({ title, actions }: PageHeaderProps) {
                 style={{ textDecoration: "none" }}
                 key={action.label}
               >
-                <button className={styles.button}>{action.label}</button>
+                <button>{action.label}</button>
               </Link>
             );
           }

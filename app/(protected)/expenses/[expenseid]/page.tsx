@@ -64,7 +64,7 @@ export default async function ExpenseDetails({ params }: PageProps) {
           },
         ]}
       />
-      <section id="bills-list">
+      <section id="bills-list" style={{ overflow: "auto" }}>
         <DataGrid columns={billColumns} data={bills} />
       </section>
     </main>

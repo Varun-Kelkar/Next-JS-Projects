@@ -130,7 +130,7 @@ export default function ExpensesPage() {
         />
       </section>
 
-      <section>
+      <section style={{overflow: "auto"}}>
         <DataGrid columns={expenseColumns} data={expenses} />
       </section>
     </main>

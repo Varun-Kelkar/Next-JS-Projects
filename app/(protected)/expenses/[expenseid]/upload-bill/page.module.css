@@ -6,6 +6,12 @@
   padding: 1rem;
 }
 
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+  }
+}
+
 .left,
 .right {
   flex: 1 1 48%;

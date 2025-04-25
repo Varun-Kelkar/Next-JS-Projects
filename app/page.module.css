@@ -1,42 +1,4 @@
-.header {
-  /* background-color: #4caf50; */
-  background-color: #0a0f2c;
-  color: white;
-  padding: 0.5rem 0;
-}
 
-.header .logo h1 {
-  color: white;
-  text-align: center;
-}
-
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-}
-
-.nav .nav-links {
-  list-style-type: none;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.nav .nav-links li {
-  margin-left: 20px;
-}
-
-.nav .nav-links a {
-  text-decoration: none;
-  color: white;
-  font-size: 18px;
-}
-
-.nav .nav-links a:hover {
-  text-decoration: underline;
-}
 
 .hero {
   background: linear-gradient(120deg, #89f7fe, #66a6ff);

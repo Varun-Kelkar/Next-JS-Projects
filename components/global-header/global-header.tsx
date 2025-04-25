@@ -53,6 +53,7 @@ export default function GlobalHeader({ user }: { user: User | null }) {
           )}
         </ul>
       </nav>
+      {/* <></> */}
       {isMobile && open && (
         <ul className={styles["mobile-nav-links"]}>
           <li>
